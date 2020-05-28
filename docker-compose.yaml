@@ -1,0 +1,51 @@
+version: "3.3"
+
+services:
+  traefik:
+    image: "traefik:v2.2"
+    container_name: "traefik"
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+
+  dcollect:
+    build: ../dcollect
+    expose:
+      - "8000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dcollect.rule=Host(`dcollect.tspnhq.com`)"
+      - "traefik.http.services.dcollect.loadbalancer.server.port=8000"
+      - "traefik.http.routers.dcollect.entrypoints=web"
+
+  entwatcher:
+    build: ../entwatcher
+    expose:
+      - "8000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.entwatcher.rule=Host(`entwatcher.tspnhq.com`)"
+      - "traefik.http.services.entwatcher.loadbalancer.server.port=8000"
+      - "traefik.http.routers.entwatcher.entrypoints=web"
+    environment:
+      - DCOLLECT_BASE_URL=http://dcollect:8000
+      - ENTWATCHER_BASE_URL=http://entwatcher:8000
+
+
+  compgraph:
+    build: ../compgraph
+    expose:
+      - "8000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.compgraph.rule=Host(`compgraph.tspnhq.com`)"
+      - "traefik.http.routers.compgraph.entrypoints=web"
+      - "traefik.http.services.compgraph.loadbalancer.server.port=8000"
