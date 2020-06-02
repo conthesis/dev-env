@@ -15,11 +15,30 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
+  nats:
+    image: "nats:2.1.7-scratch"
+    expose:
+      - "4222"
+      - "8222"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nats.rule=Host(`nats.tspnhq.com`)"
+      - "traefik.http.services.nats.loadbalancer.server.port=8222"
+      - "traefik.http.routers.nats.entrypoints=web"
+
+  redis:
+    image: redis:6.0.4
+    expose:
+      - "6379"
 
   dcollect:
     build: ../dcollect
+    depends_on:
+      - redis
     expose:
       - "8000"
+    environment:
+      - REDIS_URL=redis://redis/
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dcollect.rule=Host(`dcollect.tspnhq.com`)"
@@ -28,6 +47,8 @@ services:
 
   entwatcher:
     build: ../entwatcher
+    depends_on:
+      - dcollect
     expose:
       - "8000"
     labels:
