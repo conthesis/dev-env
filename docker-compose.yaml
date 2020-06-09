@@ -32,7 +32,12 @@ services:
       - "6379"
 
   dcollect:
+    build:
+      context: ../dcollect
+      cache_from:
+        - docker.pkg.github.com/conthesis/dcollect/dcollect
     build: ../dcollect
+
     depends_on:
       - redis
     expose:
@@ -59,7 +64,7 @@ services:
     environment:
       - DCOLLECT_BASE_URL=http://dcollect:8000
       - ENTWATCHER_BASE_URL=http://entwatcher:8000
-
+      - REDIS_URL=redis://redis/
 
   compgraph:
     build: ../compgraph
