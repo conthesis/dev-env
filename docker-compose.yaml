@@ -75,3 +75,15 @@ services:
       - "traefik.http.routers.compgraph.rule=Host(`compgraph.tspnhq.com`)"
       - "traefik.http.routers.compgraph.entrypoints=web"
       - "traefik.http.services.compgraph.loadbalancer.server.port=8000"
+
+  cas:
+    build: ../cas
+    expose:
+      - "8000"
+    environment:
+      - REDIS_URL=redis://redis/
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.compgraph.rule=Host(`cas.tspnhq.com`)"
+      - "traefik.http.routers.compgraph.entrypoints=web"
+      - "traefik.http.services.compgraph.loadbalancer.server.port=8000"
