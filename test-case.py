@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import asyncio
 import json
 import httpx
 
@@ -21,8 +22,8 @@ async def store_ent(entity: str, data):
     return await insert_vsn(entity, ptr)
 
 async def store_ents(ents):
-    for (ent, val) in ents:
-        await store_ents(ent, val)
+    asyncio.gather([store_ents(ent, val) for (ent, val) in ents])
+
 
 async def subscribe(name, trigger_url, entities):
     resp = await http.post("http://entwatcher.tspnhq.com/v1/subscribe/{name}", json=dict(trigger_url=trigger_url, entities=entities))
