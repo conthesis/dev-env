@@ -44,6 +44,7 @@ services:
       - "8000"
     environment:
       - REDIS_URL=redis://redis/
+      - CAS_URL=http://cas:8000
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dcollect.rule=Host(`dcollect.tspnhq.com`)"
@@ -65,6 +66,7 @@ services:
       - DCOLLECT_BASE_URL=http://dcollect:8000
       - ENTWATCHER_BASE_URL=http://entwatcher:8000
       - REDIS_URL=redis://redis/
+      - CAS_URL=http://cas:8000
 
   compgraph:
     build: ../compgraph
@@ -84,6 +86,6 @@ services:
       - REDIS_URL=redis://redis/
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.compgraph.rule=Host(`cas.tspnhq.com`)"
-      - "traefik.http.routers.compgraph.entrypoints=web"
-      - "traefik.http.services.compgraph.loadbalancer.server.port=8000"
+      - "traefik.http.routers.cas.rule=Host(`cas.tspnhq.com`)"
+      - "traefik.http.routers.cas.entrypoints=web"
+      - "traefik.http.services.cas.loadbalancer.server.port=8000"
