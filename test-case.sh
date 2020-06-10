@@ -11,7 +11,7 @@ mk_ent template \
 
 
 http --json POST "entwatcher.tspnhq.com/v1/subscribe/my_dag" \
-     trigger_url="http://compgraph:8000/triggerProcess" \
+     trigger_url="TriggerDAG" \
      entities:='{ "$Template": "template", "foo": "foo", "bar": "bar"}'
 
 mk_ent foo '{"foo": 2}'
