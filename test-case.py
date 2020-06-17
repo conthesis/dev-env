@@ -37,7 +37,7 @@ async def main():
         ("foo", { "foo": 1}),
         ("bar", { "bar": 1}),
         ("template", {"name":"foo","entries":[{"name":"step1","inputs":["a"],"action": "identity"}]}),
-        ("my_dag_watcher", {
+        ("_conthesis.watcher.my_dag_watcher", {
             "kind": "TriggerDAG",
             "properties": {
                 "foo": "foo",
@@ -45,9 +45,6 @@ async def main():
             }
         })
     ])
-
-    await subscribe("my_dag_watcher")
-
     await store_ents([
         ("foo", {"foo": 2}),
         ("bar", {"bar": 2}),
