@@ -40,6 +40,7 @@ async def main():
         ("_conthesis.watcher.my_dag_watcher", {
             "kind": "TriggerDAG",
             "properties": {
+                "$Template": "template",
                 "foo": "foo",
                 "bar": "bar",
             }
