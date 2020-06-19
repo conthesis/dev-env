@@ -53,15 +53,6 @@ services:
 
   entwatcher:
     build: ../entwatcher
-    depends_on:
-      - dcollect
-    expose:
-      - "8000"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.entwatcher.rule=Host(`entwatcher.tspnhq.com`)"
-      - "traefik.http.services.entwatcher.loadbalancer.server.port=8000"
-      - "traefik.http.routers.entwatcher.entrypoints=web"
     environment:
       - DCOLLECT_BASE_URL=http://dcollect:8000
       - ACTIONS_BASE_URL=http://actions:8000
