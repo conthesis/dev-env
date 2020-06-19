@@ -27,7 +27,7 @@ services:
       - "traefik.http.routers.nats.entrypoints=web"
 
   redis:
-    image: redis:6.0.4
+    image: redis:6.0.5
     expose:
       - "6379"
 
