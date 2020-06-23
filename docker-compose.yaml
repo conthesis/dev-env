@@ -54,20 +54,15 @@ services:
   entwatcher:
     build: ../entwatcher
     environment:
+      - NATS_URL=nats://nats:4222
       - DCOLLECT_BASE_URL=http://dcollect:8000
-      - ACTIONS_BASE_URL=http://actions:8000
       - REDIS_URL=redis://redis/
       - CAS_URL=http://cas:8000
 
   compgraph:
     build: ../compgraph
-    expose:
-      - "8000"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.compgraph.rule=Host(`compgraph.tspnhq.com`)"
-      - "traefik.http.routers.compgraph.entrypoints=web"
-      - "traefik.http.services.compgraph.loadbalancer.server.port=8000"
+    environment:
+      - NATS_URL=nats://nats:4222
 
   cas:
     build: ../cas
@@ -83,12 +78,7 @@ services:
 
   actions:
     build: ../actions
-    expose:
-      - "8000"
     environment:
-      - COMPGRAPH_BASE_URL=http://compgraph:8000/
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.actions.rule=Host(`actions.tspnhq.com`)"
-      - "traefik.http.routers.actions.entrypoints=web"
-      - "traefik.http.services.actions.loadbalancer.server.port=8000"
+      - DCOLLECT_BASE_URL=http://dcollect:8000
+      - CAS_URL=http://cas:8000
+      - NATS_URL=nats://nats:4222
