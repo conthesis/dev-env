@@ -2,25 +2,25 @@
 import asyncio
 import json
 
-import httpx
+from nats.aio.client import Client as NATS
 
-http = httpx.AsyncClient()
-
+nc = NATS()
 
 async def cas_store(data):
     if isinstance(data, dict):
-        data = json.dumps(data)
-    resp = await http.post("http://cas.tspnhq.com/v1/store", data=data)
-    resp.raise_for_status()
-    return await resp.aread()
+        data = json.dumps(data).encode("utf-8")
+    res = await nc.request("conthesis.cas.store", data, timeout=3)
+    if res.data is None or len(res.data) == 0:
+        return None
+    return res.data
 
 
 async def insert_vsn(entity: str, pointer: bytes):
-    resp = await http.post(
-        f"http://dcollect.tspnhq.com/entity-ptr/{entity}", data=pointer
-    )
-    resp.raise_for_status()
-    return resp.json()
+    data = entity.encode("utf-8") + b"\n" + pointer
+    res = await nc.request("conthesis.dcollect.store", data, timeout=3)
+    if res.data == b"ERR":
+        raise RuntimeError("dcollect.store failed")
+    return res.data
 
 
 async def store_ent(entity: str, data):
@@ -32,13 +32,8 @@ async def store_ents(ents):
     await asyncio.gather(*[store_ent(ent, val) for (ent, val) in ents])
 
 
-async def subscribe(name):
-    resp = await http.post(f"http://entwatcher.tspnhq.com/v1/subscribe/{name}")
-    resp.raise_for_status()
-    return resp
-
-
 async def main():
+    await nc.connect("nats://localhost:4222", loop=asyncio.get_running_loop())
     await store_ents(
         [
             ("foo", {"foo": 1}),
