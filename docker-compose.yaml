@@ -20,6 +20,8 @@ services:
     expose:
       - "4222"
       - "8222"
+    ports:
+      - "4222:4222"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.nats.rule=Host(`nats.tspnhq.com`)"
@@ -37,27 +39,17 @@ services:
       cache_from:
         - docker.pkg.github.com/conthesis/dcollect/dcollect
     build: ../dcollect
-
     depends_on:
       - redis
-    expose:
-      - "8000"
     environment:
       - REDIS_URL=redis://redis/
-      - CAS_URL=http://cas:8000
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.dcollect.rule=Host(`dcollect.tspnhq.com`)"
-      - "traefik.http.services.dcollect.loadbalancer.server.port=8000"
-      - "traefik.http.routers.dcollect.entrypoints=web"
+      - NATS_URL=nats://nats:4222
 
   entwatcher:
     build: ../entwatcher
     environment:
       - NATS_URL=nats://nats:4222
-      - DCOLLECT_BASE_URL=http://dcollect:8000
       - REDIS_URL=redis://redis/
-      - CAS_URL=http://cas:8000
 
   compgraph:
     build: ../compgraph
@@ -69,16 +61,15 @@ services:
     expose:
       - "8000"
     environment:
+      - NATS_URL=nats://nats:4222
       - REDIS_URL=redis://redis/
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.cas.rule=Host(`cas.tspnhq.com`)"
-      - "traefik.http.routers.cas.entrypoints=web"
-      - "traefik.http.services.cas.loadbalancer.server.port=8000"
 
   actions:
     build: ../actions
     environment:
-      - DCOLLECT_BASE_URL=http://dcollect:8000
-      - CAS_URL=http://cas:8000
+      - NATS_URL=nats://nats:4222
+
+  maestro:
+    build: ../maestro
+    environment:
       - NATS_URL=nats://nats:4222
