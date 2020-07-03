@@ -63,6 +63,7 @@ services:
     environment:
       - NATS_URL=nats://nats:4222
       - REDIS_URL=redis://redis/
+      - STORAGE_DRIVER=redis
 
   actions:
     build: ../actions
