@@ -64,5 +64,5 @@ async def main():
         [("foo", {"foo": 2}), ("bar", {"bar": 2}),]
     )
 
-
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())

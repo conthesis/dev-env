@@ -32,6 +32,8 @@ services:
     image: redis:6.0.5
     expose:
       - "6379"
+    ports:
+      - "6379:6379"
 
   dcollect:
     build:
@@ -58,8 +60,6 @@ services:
 
   cas:
     build: ../cas
-    expose:
-      - "8000"
     environment:
       - NATS_URL=nats://nats:4222
       - REDIS_URL=redis://redis/
@@ -74,3 +74,24 @@ services:
     build: ../maestro
     environment:
       - NATS_URL=nats://nats:4222
+
+  matcher:
+    build: ../matcher
+    environment:
+      - NATS_URL=nats://nats:4222
+
+  dgraph:
+    image: dgraph/standalone:v20.03.0
+    expose:
+      - "8080"
+      - "9080"
+      - "8000"
+    ports:
+      - 8081:8080
+      - 9081:9080
+      - 8001:8000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dgraph.rule=Host(`dgraph.tspnhq.com`)"
+      - "traefik.http.routers.dgraph.entrypoints=web"
+      - "traefik.http.services.dgraph.loadbalancer.server.port=8000"

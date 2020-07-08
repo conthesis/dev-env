@@ -1,0 +1,47 @@
+kind: matcher.Match
+wildcard_triggers:
+  - sample-enron.email
+properties:
+  - name: config
+    kind: LITERAL
+    value:
+      entities:
+        - name: from
+          dgraph_type: "EmailAddress"
+          query_filter:
+            name: email_address
+            key: from
+        - name: to
+          dgraph_type: "EmailAddress"
+          multiple: true
+          query_filter:
+            name: email_address
+            key: to
+        - name: cc
+          dgraph_type: "EmailAddress"
+          multiple: true
+          query_filter:
+            name: email_address
+            key: cc
+        - name: bcc
+          dgraph_type: "EmailAddress"
+          multiple: true
+          query_filter:
+            name: email_address
+            key: bcc
+        - name: message
+          dgraph_type: "EmailMessage"
+          query_filter:
+            name: id
+      relations:
+      - ["from", "sent_message", "message"]
+      - ["to", "received_message", "message"]
+      - ["cc", "cced_message", "message"]
+      - ["bcc", "bcced_message", "message"]
+      - ["message", "to", "to"]
+      - ["message", "cc", "cc"]
+      - ["message", "bcc", "bcc"]
+      - ["message", "from", "from"]
+  - name: data
+    kind: META_ENTITY
+    value: "updated_entity"
