@@ -75,8 +75,8 @@ services:
     environment:
       - NATS_URL=nats://nats:4222
 
-  matcher:
-    build: ../matcher
+  dgraph-importer:
+    build: ../draph-importer
     environment:
       - NATS_URL=nats://nats:4222
 
