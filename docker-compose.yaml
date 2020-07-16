@@ -46,6 +46,7 @@ services:
     environment:
       - REDIS_URL=redis://redis/
       - NATS_URL=nats://nats:4222
+      - STORAGE_DRIVER=redis
 
   entwatcher:
     build: ../entwatcher
@@ -69,6 +70,7 @@ services:
     build: ../actions
     environment:
       - NATS_URL=nats://nats:4222
+      - REDIS_URL=redis://redis/
 
   maestro:
     build: ../maestro
@@ -76,7 +78,7 @@ services:
       - NATS_URL=nats://nats:4222
 
   dgraph-importer:
-    build: ../draph-importer
+    build: ../dgraph-importer
     environment:
       - NATS_URL=nats://nats:4222
 
