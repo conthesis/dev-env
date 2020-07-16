@@ -81,7 +81,7 @@ services:
       - NATS_URL=nats://nats:4222
 
   dgraph:
-    image: dgraph/standalone:v20.03.0
+    image: dgraph/standalone:v20.03.3
     expose:
       - "8080"
       - "9080"
