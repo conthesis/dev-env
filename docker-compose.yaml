@@ -77,6 +77,11 @@ services:
     environment:
       - NATS_URL=nats://nats:4222
 
+  cfsd:
+    build: ../cfsd
+    environment:
+      - NATS_URL=nats://nats:4222
+
   dgraph-importer:
     build: ../dgraph-importer
     environment:
