@@ -1,6 +1,6 @@
 kind: dgraph.Import
 wildcard_triggers:
-  - sample-enron.email
+  - sample-enron/email
 properties:
   - name: config
     kind: LITERAL
