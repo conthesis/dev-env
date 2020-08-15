@@ -88,6 +88,19 @@ services:
     environment:
       - NATS_URL=nats://nats:4222
 
+  admin:
+    build: ../admin
+    expose:
+      - "3000"
+    environment:
+      - NATS_URL=nats://nats:4222
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dgraph.rule=Host(`dgraph.tspnhq.com`)"
+      - "traefik.http.routers.dgraph.entrypoints=web"
+      - "traefik.http.services.dgraph.loadbalancer.server.port=3000"
+
+
   dgraph:
     image: dgraph/standalone:v20.07.0
     expose:
