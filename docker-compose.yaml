@@ -60,13 +60,25 @@ services:
     environment:
       - NATS_URL=nats://nats:4222
 
+  minio:
+    image: minio/minio
+    expose:
+      - 9000
+    environment:
+      - MINIO_ACCESS_KEY=AKIAIOSFODNN7EXAMPLE
+      - MINIO_SECRET_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+    volumes:
+      - minio:/data
+    command: server /data
+
   cas:
     build: ../cas
     environment:
+      - MINIO_ENDPOINT=minio:9000
       - NATS_URL=nats://nats:4222
-      - REDIS_URL=redis://redis/
-      - STORAGE_DRIVER=redis
-
+      - STORAGE_DRIVER=minio
+      - MINIO_KEY_ID=AKIAIOSFODNN7EXAMPLE
+      - MINIO_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
   actions:
     build: ../actions
     environment:
@@ -96,9 +108,9 @@ services:
       - NATS_URL=nats://nats:4222
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dgraph.rule=Host(`dgraph.tspnhq.com`)"
-      - "traefik.http.routers.dgraph.entrypoints=web"
-      - "traefik.http.services.dgraph.loadbalancer.server.port=3000"
+      - "traefik.http.routers.admin.rule=Host(`admin.tspnhq.com`)"
+      - "traefik.http.routers.admin.entrypoints=web"
+      - "traefik.http.services.admin.loadbalancer.server.port=3000"
 
 
   dgraph:
@@ -116,3 +128,6 @@ services:
       - "traefik.http.routers.dgraph.rule=Host(`dgraph.tspnhq.com`)"
       - "traefik.http.routers.dgraph.entrypoints=web"
       - "traefik.http.services.dgraph.loadbalancer.server.port=8000"
+
+volumes:
+  minio:
