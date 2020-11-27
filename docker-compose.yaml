@@ -16,7 +16,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
   nats:
-    image: "nats:2.1.7-scratch"
+    image: "nats:2.1.9-scratch"
     expose:
       - "4222"
       - "8222"
