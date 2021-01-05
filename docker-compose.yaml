@@ -114,7 +114,7 @@ services:
 
 
   dgraph:
-    image: dgraph/standalone:v20.07.0
+    image: dgraph/standalone:v20.11.0
     expose:
       - "8080"
       - "9080"
